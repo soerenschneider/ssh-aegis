@@ -1,0 +1,10 @@
+---
+linters:
+  enable:
+    - bodyclose
+    - cyclop
+    - gosec
+    - exhaustive
+    - forbidigo
+    - gci
+    - gocritic
