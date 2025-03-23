@@ -42,6 +42,7 @@ func main() {
 		os.Exit(0)
 	}
 
+	setupLogging()
 	slog.Info("Starting ssh-aegis", "version", BuildVersion)
 	slog.Info("Reading config", "file", flagConfigFile)
 	config, err := readConfig(flagConfigFile)
@@ -135,4 +136,18 @@ func buildMetricsWriter(config *SshAegisConfig) (*MetricsWriter, error) {
 	}
 
 	return NewMetricsWriter(config.MetricsFile)
+}
+
+func setupLogging() {
+	var level slog.Leveler = slog.LevelInfo
+	if flagDebug {
+		level = slog.LevelDebug
+	}
+
+	handler := slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{
+		Level: level,
+	})
+
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
 }
