@@ -1,8 +1,8 @@
 package main
 
 import (
-	"bytes"
 	"fmt"
+	"log"
 	"os"
 	"text/template"
 	"time"
@@ -61,14 +61,16 @@ func NewMetricsWriter(metricsFile string) (*MetricsWriter, error) {
 
 func (m *MetricsWriter) Dump() error {
 	metrics.MetricNow = time.Now().Unix()
-	var buffer bytes.Buffer
-	if err := m.tmpl.Execute(&buffer, metrics); err != nil {
-		return fmt.Errorf("could not execute template: %w", err)
-	}
 
 	tmpFile := fmt.Sprintf("%s.tmp", m.metricsFile)
-	if err := os.WriteFile(tmpFile, buffer.Bytes(), 0640); err != nil { //nolint G306
-		return fmt.Errorf("could not write metrics tmp file: %w", err)
+	file, err := os.Create(tmpFile)
+	if err != nil {
+		log.Fatalf("Error creating file: %v", err)
+	}
+	defer file.Close()
+
+	if err := m.tmpl.Execute(file, metrics); err != nil {
+		return fmt.Errorf("could not execute template: %w", err)
 	}
 
 	return os.Rename(tmpFile, m.metricsFile)
