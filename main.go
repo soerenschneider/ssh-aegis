@@ -93,7 +93,7 @@ func main() {
 
 func run(ctx context.Context, ssh *SshAegis, metricsWriter *MetricsWriter) {
 	ssh.Check()
-	t := time.NewTicker(15 * time.Second)
+	t := time.NewTicker(1 * time.Minute)
 
 	silenceMetricsWriterWarnLogs := false
 
