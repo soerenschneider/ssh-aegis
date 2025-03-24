@@ -1,6 +1,11 @@
-# SSH-Aegis
+# ssh-aegis
 
-🚀 **SSH-Aegis** is a lightweight, zero-dependency tool that dynamically adjusts your SSH listening address based on the status of your wireguard VPN connection. It helps **reduce SSH attack surface** by ensuring that SSH is only exposed publicly when absolutely necessary.
+[![Go Report Card](https://goreportcard.com/badge/github.com/soerenschneider/ssh-aegis)](https://goreportcard.com/report/github.com/soerenschneider/ssh-aegis)
+![test-workflow](https://github.com/soerenschneider/ssh-aegis/actions/workflows/test.yaml/badge.svg)
+![release-workflow](https://github.com/soerenschneider/ssh-aegis/actions/workflows/release-container.yaml/badge.svg)
+![golangci-lint-workflow](https://github.com/soerenschneider/ssh-aegis/actions/workflows/golangci-lint.yaml/badge.svg)
+
+🚀 **ssh-aegis** is a lightweight, zero-dependency tool that dynamically adjusts your SSH listening address based on the status of your wireguard VPN connection. It helps **reduce SSH attack surface** by ensuring that SSH is only exposed publicly when absolutely necessary.
 
 ## ✨ Features
 - **Automatic SSH Binding:**
