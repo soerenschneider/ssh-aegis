@@ -59,6 +59,14 @@ func (c *SshAegisConfig) Validate() error {
 		return fmt.Errorf("sshd config file does not exist: %s", c.SshdConfigFile)
 	}
 
+	if c.SshServiceName == "" {
+		return errors.New("empty ssh service name provided")
+	}
+
+	if c.WireguardInterface == "" {
+		return errors.New("empty wg interface name provided")
+	}
+
 	return nil
 }
 
