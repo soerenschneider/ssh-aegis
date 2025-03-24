@@ -27,7 +27,7 @@ type SshAegisConfig struct {
 	MetricsFile            string   `json:"metrics_file"`
 }
 
-func (c *SshAegisConfig) Validate() error {
+func (c *SshAegisConfig) Validate() error { //nolint:cyclop
 	if slices.Equal(c.ListenAddressesUp, c.ListenAddressesDown) {
 		return errors.New("addresses for up and down are equal")
 	}
