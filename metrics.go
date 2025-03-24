@@ -10,36 +10,36 @@ import (
 
 const templateData = `# HELP ssh_aegis_timestamp_seconds the timestamp of the invocation
 # TYPE ssh_aegis_timestamp_seconds gauge
-ssh_aegis_timestamp_seconds {{ .MetricNow }}
+ssh_aegis_timestamp_seconds {{ .Now }}
 # HELP ssh_aegis_status represents the status of the tunnel
 # TYPE ssh_aegis_status gauge
-ssh_aegis_status{status="{{ .MetricStatus }}"} 1
+ssh_aegis_status{status="{{ .Status }}"} 1
 # HELP ssh_aegis_last_status_change_timestamp_seconds represents the status of the tunnel
 # TYPE ssh_aegis_last_status_change_timestamp_seconds gauge
-ssh_aegis_last_status_change_timestamp_seconds {{ .MetricLastStatusChange }}
+ssh_aegis_last_status_change_timestamp_seconds {{ .LastStatusChange }}
 # HELP ssh_aegis_restart_ssh_errors Number of SSH restart errors encountered.
 # TYPE ssh_aegis_restart_ssh_errors counter
-ssh_aegis_restart_ssh_errors {{ .MetricRestartSshErrors }}
-# HELP ssh_aegis_read_config_errors Number of errors encountered while reading the config.
-# TYPE ssh_aegis_read_config_errors counter
-ssh_aegis_read_config_errors {{ .MetricReadConfigErrors }}
-# HELP ssh_aegis_write_config_errors Number of errors encountered while writing the config.
-# TYPE ssh_aegis_write_config_errors counter
-ssh_aegis_write_config_errors {{ .MetricWriteConfigErrors }}
+ssh_aegis_restart_ssh_errors {{ .RestartSshErrors }}
+# HELP ssh_aegis_config_read_errors Number of errors encountered while reading the config.
+# TYPE ssh_aegis_config_read_errors counter
+ssh_aegis_config_read_errors {{ .ConfigReadErrors }}
+# HELP ssh_aegis_config_write_errors Number of errors encountered while writing the config.
+# TYPE ssh_aegis_config_write_errors counter
+ssh_aegis_config_write_errors {{ .ConfigWriteErrors }}
 `
 
 var metrics = Metrics{
-	MetricNow:    time.Now().Unix(),
-	MetricStatus: Unknown,
+	Now:    time.Now().Unix(),
+	Status: Unknown,
 }
 
 type Metrics struct {
-	MetricNow               int64
-	MetricStatus            TunnelStatus
-	MetricLastStatusChange  int64
-	MetricRestartSshErrors  int
-	MetricReadConfigErrors  int
-	MetricWriteConfigErrors int
+	Now               int64
+	Status            TunnelStatus
+	LastStatusChange  int64
+	RestartSshErrors  int
+	ConfigReadErrors  int
+	ConfigWriteErrors int
 }
 
 type MetricsWriter struct {
@@ -60,7 +60,7 @@ func NewMetricsWriter(metricsFile string) (*MetricsWriter, error) {
 }
 
 func (m *MetricsWriter) Dump() error {
-	metrics.MetricNow = time.Now().Unix()
+	metrics.Now = time.Now().Unix()
 
 	tmpFile := fmt.Sprintf("%s.tmp", m.metricsFile)
 	file, err := os.Create(tmpFile)

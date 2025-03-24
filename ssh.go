@@ -61,7 +61,7 @@ func NewSshAegis(configWrapper ConfigWrapper, tunnelStatusSource TunnelStatusSou
 
 func (s *SshAegis) Check() {
 	status := s.tunnelStatusSource.GetStatus()
-	metrics.MetricStatus = status
+	metrics.Status = status
 
 	if s.oldStatus != status {
 		slog.Info("Status changed", "from", s.oldStatus, "to", status)
@@ -70,7 +70,7 @@ func (s *SshAegis) Check() {
 			slog.Error("could not upsert status", "err", err)
 		}
 
-		metrics.MetricLastStatusChange = time.Now().Unix()
+		metrics.LastStatusChange = time.Now().Unix()
 	}
 }
 
@@ -87,12 +87,12 @@ func (s *SshAegis) upsert(status TunnelStatus) error {
 	}
 	if updateNeeded {
 		slog.Info("Updating ListenAddress configuration", "addresses", wanted)
-		if err := s.SetConfiguredListenAddresses(wanted); err != nil {
+		if err := s.setConfiguredListenAddresses(wanted); err != nil {
 			return err
 		}
 
 		if err := s.serviceProvider.RestartSsh(); err != nil {
-			metrics.MetricRestartSshErrors++
+			metrics.RestartSshErrors++
 		}
 	} else {
 		slog.Info("No updates needed")
@@ -102,11 +102,12 @@ func (s *SshAegis) upsert(status TunnelStatus) error {
 }
 
 func (s *SshAegis) isUpdateNeeded(wantedListenAddresses []string) (bool, error) {
-	configuredListenAddresses, err := s.getConfiguredListenAddresses()
+	data, err := s.configWrapper.GetConfig()
 	if err != nil {
+		metrics.ConfigReadErrors++
 		return false, err
 	}
-
+	configuredListenAddresses := getConfiguredListenAddresses(data)
 	if len(configuredListenAddresses) != len(wantedListenAddresses) {
 		return true, nil
 	}
@@ -120,10 +121,10 @@ func (s *SshAegis) isUpdateNeeded(wantedListenAddresses []string) (bool, error) 
 	return false, nil
 }
 
-func (s *SshAegis) SetConfiguredListenAddresses(wanted []string) error {
+func (s *SshAegis) setConfiguredListenAddresses(wanted []string) error {
 	data, err := s.configWrapper.GetConfig()
 	if err != nil {
-		metrics.MetricReadConfigErrors++
+		metrics.ConfigReadErrors++
 		return err
 	}
 
@@ -145,22 +146,17 @@ func (s *SshAegis) SetConfiguredListenAddresses(wanted []string) error {
 	if len(listenAddressConfigLinesIndices) > 0 {
 		index = listenAddressConfigLinesIndices[len(listenAddressConfigLinesIndices)-1]
 	}
-	data = append(data[:index+1], append(insertBlock, data[index+1:]...)...)
+	data = slices.Insert(data, index, insertBlock...)
 
 	if err := s.configWrapper.WriteConfig(data); err != nil {
-		metrics.MetricWriteConfigErrors++
+		metrics.ConfigWriteErrors++
 		return err
 	}
 
 	return nil
 }
 
-func (s *SshAegis) getConfiguredListenAddresses() ([]string, error) {
-	data, err := s.configWrapper.GetConfig()
-	if err != nil {
-		return nil, err
-	}
-
+func getConfiguredListenAddresses(data []string) []string {
 	var addresses []string
 	for _, line := range data {
 		if strings.HasPrefix(line, listenAddressConfiguration) {
@@ -168,7 +164,7 @@ func (s *SshAegis) getConfiguredListenAddresses() ([]string, error) {
 		}
 	}
 
-	return addresses, nil
+	return addresses
 }
 
 func getListenAddressIndices(lines []string) []int {

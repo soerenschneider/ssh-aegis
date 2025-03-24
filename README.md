@@ -79,8 +79,8 @@ SSH-Aegis exposes metrics on via Prometheus NodeExporter.
 | **`ssh_aegis_status`**                               | `gauge`   | Represents the current VPN tunnel status (`up`, `down`, or `unknown`). |
 | **`ssh_aegis_last_status_change_timestamp_seconds`** | `gauge`   | Timestamp of the last VPN status change.                               |
 | **`ssh_aegis_restart_ssh_errors`**                   | `counter` | Number of errors encountered while restarting the SSH service.         |
-| **`ssh_aegis_read_config_errors`**                   | `counter` | Number of errors encountered while reading the configuration file.     |
-| **`ssh_aegis_write_config_errors`**                  | `counter` | Number of errors encountered while writing to the configuration file.  |
+| **`ssh_aegis_config_read_errors`**                   | `counter` | Number of errors encountered while reading the configuration file.     |
+| **`ssh_aegis_config_write_errors`**                  | `counter` | Number of errors encountered while writing to the configuration file.  |
 
 
 
