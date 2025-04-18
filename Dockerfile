@@ -11,7 +11,7 @@ RUN go mod download
 COPY ./ ./
 
 RUN go mod download
-RUN CGO_ENABLED=${CGO_ENABLED} go build -ldflags="-w -X 'main.BuildVersion=${VERSION}' -X 'main.CommitHash=${COMMIT_HASH}'" -o /ssh-aegis .
+RUN CGO_ENABLED=${CGO_ENABLED} go build -ldflags="-w -X 'main.BuildVersion=${VERSION}' -X 'main.CommitHash=${COMMIT_HASH}' -X 'main.GoVersion=$(go version | awk '{print $3}' | sed 's/^go//')'" -o /ssh-aegis .
 
 
 FROM gcr.io/distroless/static AS final

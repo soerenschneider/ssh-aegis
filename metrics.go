@@ -8,7 +8,10 @@ import (
 	"time"
 )
 
-const templateData = `# HELP ssh_aegis_timestamp_seconds the timestamp of the invocation
+const templateData = `# HELP ssh_aegis_version version information for the running binary
+# TYPE ssh_aegis_version gauge
+ssh_aegis_version{app="{{ index .Version "app" }}",go="{{ index .Version "go" }}"} 1
+# HELP ssh_aegis_timestamp_seconds the timestamp of the invocation
 # TYPE ssh_aegis_timestamp_seconds gauge
 ssh_aegis_timestamp_seconds {{ .Now }}
 # HELP ssh_aegis_status represents the status of the tunnel
@@ -29,11 +32,16 @@ ssh_aegis_config_write_errors {{ .ConfigWriteErrors }}
 `
 
 var metrics = Metrics{
+	Version: map[string]string{
+		"go":  GoVersion,
+		"app": BuildVersion,
+	},
 	Now:    time.Now().Unix(),
 	Status: Unknown,
 }
 
 type Metrics struct {
+	Version           map[string]string
 	Now               int64
 	Status            TunnelStatus
 	LastStatusChange  int64

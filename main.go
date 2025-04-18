@@ -24,6 +24,7 @@ var (
 
 	BuildVersion string
 	CommitHash   string
+	GoVersion    string
 )
 
 func parseFlags() {
@@ -38,12 +39,12 @@ func main() {
 
 	if flagPrintVersion {
 		//nolint forbidigo
-		fmt.Printf("%s %s\n", BuildVersion, CommitHash)
+		fmt.Println(fmt.Sprintf("%s %s go%s", BuildVersion, CommitHash, GoVersion))
 		os.Exit(0)
 	}
 
 	setupLogging()
-	slog.Info("Starting ssh-aegis", "version", BuildVersion)
+	slog.Info("Starting ssh-aegis", "version", BuildVersion, "go", GoVersion)
 	slog.Info("Reading config", "file", flagConfigFile)
 	config, err := readConfig(flagConfigFile)
 	if err != nil {
