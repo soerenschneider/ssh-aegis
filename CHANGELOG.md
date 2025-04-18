@@ -1,5 +1,18 @@
 # Changelog
 
+## [1.1.0](https://github.com/soerenschneider/ssh-aegis/compare/v1.0.2...v1.1.0) (2025-04-18)
+
+
+### Features
+
+* add metric that holds version info ([1d11bec](https://github.com/soerenschneider/ssh-aegis/commit/1d11bec24a79516789e1aa76620f430335e42ea3))
+
+
+### Bug Fixes
+
+* **deps:** bump golang from 1.24.1 to 1.24.2 ([83fb6d9](https://github.com/soerenschneider/ssh-aegis/commit/83fb6d9becb04ec5ef6af326bf6ef08a06264785))
+* **deps:** bump golang from 1.24.1 to 1.24.2 ([2aa2269](https://github.com/soerenschneider/ssh-aegis/commit/2aa2269f3502a773d6530c2eddbe6a3145187e4e))
+
 ## [1.0.2](https://github.com/soerenschneider/ssh-aegis/compare/v1.0.1...v1.0.2) (2025-03-24)
 
 
